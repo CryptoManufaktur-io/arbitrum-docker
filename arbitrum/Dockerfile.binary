@@ -1,0 +1,19 @@
+ARG DOCKER_TAG
+
+FROM offchainlabs/nitro-node:${DOCKER_TAG}
+
+ARG USER=user
+USER root
+
+RUN apt-get update && apt-get install -y ca-certificates tzdata bash
+
+RUN mkdir -p /var/lib/nitro && chown -R ${USER}:${USER} /var/lib/nitro
+
+# Cannot assume buildkit, hence no chmod
+COPY ./docker-entrypoint.sh /usr/local/bin/
+# Belt and suspenders
+RUN chmod -R 755 /usr/local/bin/*
+
+USER user
+
+ENTRYPOINT ["nitro"]
