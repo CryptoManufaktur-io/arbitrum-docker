@@ -32,6 +32,11 @@ else
   __snap=""
 fi
 
+if [ -f /var/lib/nitro/prune-marker ]; then
+  rm -f /var/lib/nitro/prune-marker
+  exec "$@" --init.prune full
+else
 # Word splitting is desired for the command line parameters
 # shellcheck disable=SC2086
-exec "$@" ${__verbosity} ${__snap} ${EXTRAS}
+  exec "$@" ${__verbosity} ${__snap} ${EXTRAS}
+fi

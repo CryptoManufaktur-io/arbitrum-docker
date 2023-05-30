@@ -38,8 +38,6 @@ services:
       - --l2.chain-id
       - ${L2_CHAIN_ID}
       - --node.staker.enable=false
-      - --init.prune
-      - full
       - --http.addr
       - 0.0.0.0
       - --http.port
@@ -83,6 +81,15 @@ services:
       - metrics.scrape=true
       - metrics.path=/metrics
       - metrics.port=6070
+
+  set-prune-marker:
+    profiles: ["tools"]
+    image: alpine:3
+    restart: "no"
+    volumes:
+      - nitro-data:/var/lib/nitro
+    entrypoint: ["/bin/sh","-c"]
+    command: /bin/sh
 
 volumes:
   nitro-data:
