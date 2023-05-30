@@ -498,6 +498,7 @@ prune-nitro() {
         echo "${sync_status}"
         echo ""
         echo "Aborting."
+        exit 1
     fi
 
     node_logs=$(docompose logs --no-color --tail 1000 nitro)
