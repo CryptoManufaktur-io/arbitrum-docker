@@ -15,7 +15,7 @@ The `./ethd` script can be used as a quick-start:
 
 `cp default.env .env`
 
-Adjust variables as needed, particularly `CHAIN_ID` and `SNAPSHOT`
+Adjust variables as needed, particularly `L2_CHAIN_ID` and `L1_RPC`
 
 `./ethd up`
 
