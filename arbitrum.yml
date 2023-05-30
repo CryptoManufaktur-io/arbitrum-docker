@@ -37,6 +37,9 @@ services:
       - ${L1_RPC}
       - --l2.chain-id
       - ${L2_CHAIN_ID}
+      - --node.staker.enable=false
+      - --init.prune
+      - full
       - --http.addr
       - 0.0.0.0
       - --http.port
