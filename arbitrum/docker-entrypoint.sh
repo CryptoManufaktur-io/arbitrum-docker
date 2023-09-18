@@ -26,7 +26,7 @@ case ${LOG_LEVEL} in
 esac
 
 # Prep datadir
-if [ "${L2_CHAIN_ID}" = "42161" ] && [ ! -d "/var/lib/nitro/nitro/l2chaindata" ]; then
+if [ "${NETWORK}" = "nova" ] && [ ! -d "/var/lib/nitro/nitro/l2chaindata" ]; then
   __snap="--init.url=${SNAPSHOT}"
 else
   __snap=""

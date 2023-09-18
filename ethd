@@ -353,10 +353,10 @@ envmigrate() {
         return
     fi
 
-    ALL_VARS=( COMPOSE_FILE L2_CHAIN_ID SNAPSHOT L1_RPC EXTRAS LOG_LEVEL \
+    ALL_VARS=( COMPOSE_FILE NETWORK SNAPSHOT PARENT_RPC EXTRAS LOG_LEVEL \
             NITRO_DOCKER_TAG DOMAIN RPC_HOST RPC_LB WS_HOST WS_LB RPC_PORT WS_PORT )
-    OLD_VARS=( )
-    NEW_VARS=( )
+    OLD_VARS=( L1_RPC )
+    NEW_VARS=( PARENT_RPC )
 
     if [ "${EUID}" -eq 0 ]; then
       sudo -u "${OWNER}" cp "${ENV_FILE}" "${ENV_FILE}".source
