@@ -22,7 +22,6 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - SNAPSHOT=${SNAPSHOT}
       - EXTRAS=${EXTRAS}
-      - NETWORK=${NETWORK}
     volumes:
       - nitro-data:/var/lib/nitro
       - /etc/localtime:/etc/localtime:ro
