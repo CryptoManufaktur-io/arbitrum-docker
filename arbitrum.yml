@@ -22,7 +22,6 @@ services:
       - LOG_LEVEL=${LOG_LEVEL:-info}
       - SNAPSHOT=${SNAPSHOT}
       - EXTRAS=${EXTRAS}
-      - L2_CHAIN_ID=${L2_CHAIN_ID}
     volumes:
       - nitro-data:/var/lib/nitro
       - /etc/localtime:/etc/localtime:ro
