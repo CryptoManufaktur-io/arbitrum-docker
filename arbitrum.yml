@@ -33,10 +33,10 @@ services:
       - /var/lib/nitro
       - --persistent.global-config
       - /var/lib/nitro
-      - --l1.url
-      - ${L1_RPC}
-      - --l2.chain-id
-      - ${L2_CHAIN_ID}
+      - --parent-chain.connection.url
+      - ${PARENT_RPC}
+      - --chain.name
+      - ${NETWORK}
       - --node.staker.enable=false
       - --http.addr
       - 0.0.0.0
