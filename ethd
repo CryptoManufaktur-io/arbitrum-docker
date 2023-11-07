@@ -275,6 +275,7 @@ check_disk_space() {
         exit 70
     fi
 
+# Adjust if your clients prune manually
 # Literal match intended
 # shellcheck disable=SC2076
     if [[ "${__free_space}" -lt 52428800 ]]; then
@@ -403,6 +404,7 @@ envmigrate() {
         return
     fi
 
+# Adjust these vars to your project
     ALL_VARS=( COMPOSE_FILE NETWORK SNAPSHOT LOG_LEVEL DOMAIN RPC_HOST RPC_LB WS_HOST WS_LB RPC_PORT WS_PORT P2P_PORT \
                X_SRC_BUILD_TARGET X_SRC_REPO X_DOCKER_TAG X_DOCKER_REPO X_DOCKERFILE )
     OLD_VARS=( )
@@ -424,6 +426,7 @@ envmigrate() {
     # Migrate over user settings
     for var in "${ALL_VARS[@]}"; do
         value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" "${ENV_FILE}.source" || true)
+# Adjust for vars that are possibly empty
         if [ -n "${value}" ] || [ "${var}" = "SNAPSHOT" ]; then
             sed -i'.original' -e "s~^\(${var}\s*=\s*\).*$~\1${value}~" "${ENV_FILE}"
         fi
@@ -559,6 +562,7 @@ version() {
     var="COMPOSE_FILE"
     value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" "${ENV_FILE}" || true)
     # Client versions
+# Adjust for your clients and how to check their version
     case "${value}" in
         *x.yml* )
             docompose exec x-geth x-geth version
