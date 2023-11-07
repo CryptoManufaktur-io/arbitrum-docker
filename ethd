@@ -108,7 +108,7 @@ upgrade_compose() {
     ${__auto_sudo} apt-get update && ${__auto_sudo} apt-get install -y lsb-release
     __major_version=$(lsb_release -r | cut -d: -f2 | sed s/'^\t'// | cut -d. -f1)
     if [ "${__major_version}" -lt 20 ]; then
-      echo "This script cannot update Docker Compose on Ubuntu ${__major_version}."
+      echo "${__project_name} cannot update Docker Compose on Ubuntu ${__major_version}."
       echo "Consider upgrading to 20.04 and then 22.04."
       exit 1
     fi
@@ -128,7 +128,7 @@ upgrade_compose() {
     ${__auto_sudo} apt-get update && ${__auto_sudo} apt-get -y install ca-certificates curl gnupg lsb-release
     __major_version=$(lsb_release -r | cut -f2)
     if [ "${__major_version}" -lt 10 ]; then
-        echo "This script cannot update Docker Compose on Debian ${__major_version}."
+        echo "${__project_name} cannot update Docker Compose on Debian ${__major_version}."
         echo "Consider upgrading to 10, then 11 and then 12."
         exit 1
     fi
@@ -150,7 +150,7 @@ upgrade_compose() {
     __old_compose=0
     __compose_upgraded=1
   else
-    echo "This script does not know how to update Docker Compose on $__distro"
+    echo "${__project_name} does not know how to update Docker Compose on $__distro"
   fi
 }
 
@@ -284,7 +284,7 @@ check_disk_space() {
     if [[ "${value}" =~ "arbitrum.yml" ]] && [[ "${__free_space}" -lt 104857600 ]]; then
         echo
         echo "You are running Arbitrum and have less than 100 GiB of free disk space."
-        echo "If Avail reads 40 GiB or more, prune with ./ethd prune-nitro:"
+        echo "If Avail reads 40 GiB or more, prune with ./${__me} prune-nitro:"
         echo
         df -h "${__docker_dir}"
         echo ""
@@ -424,7 +424,6 @@ envmigrate() {
             NITRO_DOCKER_TAG DOMAIN RPC_HOST RPC_LB WS_HOST WS_LB RPC_PORT WS_PORT )
     OLD_VARS=( L1_RPC )
     NEW_VARS=( PARENT_RPC )
-
 
     var=ENV_VERSION
     __target_ver=$(sed -n -e "s/^${var}=\(.*\)/\1/p" "default.env" || true)
@@ -653,22 +652,6 @@ set_value_in_env() {
 }
 
 
-version() {
-    # ethd version
-    grep "^This is" README.md
-    echo ""
-    var="COMPOSE_FILE"
-    value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" ".env" || true)
-    # Client versions
-    case "${value}" in
-        *arbitrum.yml* )
-            docompose exec nitro nitro --version
-            echo
-            ;;&
-    esac
-}
-
-
 handle_error() {
     if [[ ! $- =~ e ]]; then
         # set +e, do nothing
@@ -692,6 +675,22 @@ handle_error() {
         echo "Restored your ${ENV_FILE} file, to undo partial migration. Please verify it looks correct."
         echo "The partially migrated file is in ${ENV_FILE}.partial for troubleshooting."
     fi
+}
+
+
+version() {
+    # ethd version
+    grep "^This is" README.md
+    echo
+    var="COMPOSE_FILE"
+    value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" ".env" || true)
+    # Client versions
+    case "${value}" in
+        *arbitrum.yml* )
+            docompose exec nitro nitro --version
+            echo
+            ;;&
+    esac
 }
 
 
@@ -793,12 +792,12 @@ if [ "${__old_compose}" -eq 1 ]; then
 fi
 
 if ! dodocker images >/dev/null 2>&1; then
-    echo "Please ensure you can call $__docker_exe before running this script."
+    echo "Please ensure you can call $__docker_exe before running ${__me}."
     exit 1
 fi
 
 if ! docompose --help >/dev/null 2>&1; then
-    echo "Please ensure you can call $__compose_exe before running this script"
+    echo "Please ensure you can call $__compose_exe before running ${__me}."
     exit 1
 fi
 
