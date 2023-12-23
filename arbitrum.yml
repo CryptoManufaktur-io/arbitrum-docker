@@ -55,8 +55,8 @@ services:
       - --metrics-server.addr
       - 0.0.0.0
       - --file-logging.enable=false
-      - --node.rpc.gas-cap=0
-      - --node.rpc.tx-fee-cap=0
+      - --execution.rpc.gas-cap=0
+      - --execution.rpc.tx-fee-cap=0
     labels:
       - traefik.enable=true
       - traefik.http.routers.${RPC_HOST:-arb}.service=${RPC_HOST:-arb}

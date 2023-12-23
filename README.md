@@ -21,4 +21,4 @@ Adjust variables as needed, particularly `L2_CHAIN_ID` and `L1_RPC`
 
 To update the software, run `./ethd update` and then `./ethd up`
 
-This is arbitrum-docker v1.1
+This is arbitrum-docker v2.0.0
