@@ -1,6 +1,6 @@
 # Overview
 
-docker compose for Arbitrum Nitro
+Docker Compose for Arbitrum Nitro
 
 Copy `default.env` to `.env`, adjust values for the right network.
 
@@ -21,4 +21,4 @@ Adjust variables as needed, particularly `L2_CHAIN_ID` and `L1_RPC`
 
 To update the software, run `./ethd update` and then `./ethd up`
 
-This is arbitrum-docker v2.0.0
+This is Arbitrum Docker v3.0.0
