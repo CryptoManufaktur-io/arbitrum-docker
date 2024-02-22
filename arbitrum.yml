@@ -35,6 +35,8 @@ services:
       - /var/lib/nitro
       - --parent-chain.connection.url
       - ${PARENT_RPC}
+      - --parent-chain.blob-client.beacon-url
+      - ${PARENT_BEACON}
       - --chain.name
       - ${NETWORK}
       - --node.staker.enable=false
