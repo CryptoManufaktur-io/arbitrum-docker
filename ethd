@@ -273,7 +273,6 @@ check_disk_space() {
         echo "Unable to determine free disk space. This is likely a bug."
         echo "df reports $(df -P "${__docker_dir}") and __free_space is ${__free_space}"
         exit 70
-        return
     fi
 
     var="COMPOSE_FILE"
@@ -321,6 +320,26 @@ nag_os_version() {
          echo
       fi
     fi
+}
+
+
+warn_l1() {
+  var="PARENT_RPC"
+  value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" "${ENV_FILE}" || true)
+# Literal match intended
+# shellcheck disable=SC2076
+  if [[ "${value}" =~ "example.com" ]]; then
+    echo "Warning: Your Parent RPC (EL) is not set to a valid value. Syncing will fail."
+    echo
+  fi
+  var="PARENT_BEACON"
+  value=$(sed -n -e "s/^${var}=\(.*\)/\1/p" "${ENV_FILE}" || true)
+# Literal match intended
+# shellcheck disable=SC2076
+  if [[ "${value}" =~ "example.com" ]]; then
+    echo "Warning: Your Parent Beacon (CL) is not set to a valid value. Syncing will fail."
+    echo
+  fi
 }
 
 
@@ -410,6 +429,7 @@ find the original contents in ${ENV_FILE}.bak."
         echo
         ${__as_owner} git status --porcelain
     fi
+    warn_l1
     __during_update=0
 }
 
@@ -538,7 +558,7 @@ prune-nitro() {
 
     __docker_dir=$(docker system info --format '{{.DockerRootDir}}')
 
-    if [ "$(df -P ${__docker_dir} | awk '/[0-9]%/{print $(NF-2)}')" -lt 41943040 ]; then
+    if [ "$(df -P "${__docker_dir}" | awk '/[0-9]%/{print $(NF-2)}')" -lt 41943040 ]; then
         echo "You do not have enough free disk space. Make sure this reads at least 40G free (Avail):"
         df -h "${__docker_dir}"
         echo ""
