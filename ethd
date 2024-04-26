@@ -822,7 +822,7 @@ if ! docompose --help >/dev/null 2>&1; then
 fi
 
 case "$__command" in
-    help|update|up|start|down|stop|restart|version|logs|cmd|terminatei|prune-nitro)
+    help|update|up|start|down|stop|restart|version|logs|cmd|terminate|prune-nitro)
         $__command "$@";;
     *)
         echo "Unrecognized command $__command"
