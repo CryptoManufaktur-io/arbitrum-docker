@@ -15,7 +15,7 @@ services:
       args:
         - DOCKER_TAG=${NITRO_DOCKER_TAG}
     image: nitro:local
-    pull_policy: build
+    pull_policy: never
     user: user
     stop_grace_period: 5m
     environment:
