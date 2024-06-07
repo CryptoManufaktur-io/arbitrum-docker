@@ -26,10 +26,10 @@ case ${LOG_LEVEL} in
 esac
 
 # Prep datadir
-if [ ! -d "/var/lib/nitro/nitro/l2chaindata" ]; then
+if [ ! -d "/var/lib/nitro/nitro/l2chaindata" ] && [ ! -n ${SNAPSHOT} ]; then
   __snap="--init.url=${SNAPSHOT}"
 else
-  __snap=""
+  __snap="--persistent.db-engine pebble"
 fi
 
 if [ -f /var/lib/nitro/prune-marker ]; then
