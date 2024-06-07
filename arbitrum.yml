@@ -80,7 +80,7 @@ services:
       - traefik.http.routers.${WS_HOST:-arbws}lb.tls.certresolver=letsencrypt
       - traefik.http.services.${WS_HOST:-arbws}.loadbalancer.server.port=${WS_PORT:-8548}
       - metrics.scrape=true
-      - metrics.path=/metrics
+      - metrics.path=/debug/metrics/prometheus
       - metrics.port=6070
 
   set-prune-marker:
