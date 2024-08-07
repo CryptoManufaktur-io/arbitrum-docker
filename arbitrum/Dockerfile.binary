@@ -1,4 +1,4 @@
-ARG DOCKER_TAG
+ARG DOCKER_TAG=v3.1.0-7d1d84c
 
 FROM offchainlabs/nitro-node:${DOCKER_TAG}
 

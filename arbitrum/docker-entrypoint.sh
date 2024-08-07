@@ -3,10 +3,10 @@ set -eu
 
 # Prep datadir
 if [ ! -d "/var/lib/nitro/nitro/l2chaindata" ]; then
-  if [ -n ${SNAPSHOT} ]; then
+  if [ -n "${SNAPSHOT}" ]; then
     __snap="--init.url=${SNAPSHOT}"
   else
-    __snap="--persistent.db-engine pebble"
+    __snap="--init.empty --persistent.db-engine pebble --execution.caching.state-scheme path"
   fi
 else
   __snap=""
