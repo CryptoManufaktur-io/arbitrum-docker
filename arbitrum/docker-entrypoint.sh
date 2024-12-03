@@ -7,9 +7,14 @@ if [ ! -d "/var/lib/nitro/nitro/l2chaindata" ]; then
     __snap="--init.url=${SNAPSHOT}"
   else
     __snap="--init.empty --persistent.db-engine pebble --execution.caching.state-scheme path"
+    touch /var/lib/nitro/state-scheme-path
   fi
 else
-  __snap=""
+  if [ -f "/var/lib/nitro/state-scheme-path" ]; then
+    __snap="--persistent.db-engine pebble --execution.caching.state-scheme path"
+  else
+    __snap=""
+  fi
 fi
 
 if [ -f /var/lib/nitro/prune-marker ]; then
