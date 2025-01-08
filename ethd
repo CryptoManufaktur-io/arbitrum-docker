@@ -18,7 +18,7 @@ version() {
 # Client versions
   case "${__value}" in
     *arbitrum.yml* )
-      docompose exec nitro nitro --version
+      __docompose exec nitro nitro --version
       echo
       ;;&
   esac
