@@ -59,8 +59,6 @@ services:
       - --metrics-server.addr
       - 0.0.0.0
       - --file-logging.enable=false
-      - --execution.rpc.gas-cap=0
-      - --execution.rpc.tx-fee-cap=0
       - --log-level
       - ${LOG_LEVEL}
     labels:
