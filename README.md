@@ -21,4 +21,4 @@ Adjust variables as needed, particularly `L2_CHAIN_ID` and `L1_RPC`
 
 To update the software, run `./arbd update` and then `./arbd up`
 
-This is Arbitrum Docker v4.0.0
+This is Arbitrum Docker v4.1.0
