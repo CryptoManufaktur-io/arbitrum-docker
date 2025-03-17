@@ -1,0 +1,102 @@
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+      max-file: "3"
+      tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+
+services:
+  nitro:
+    restart: "unless-stopped"
+    build:
+      context: ./arbitrum
+      dockerfile: Dockerfile.binary
+      args:
+        - DOCKER_TAG=${NITRO_DOCKER_TAG}
+    image: nitro:local
+    pull_policy: never
+    user: user
+    stop_grace_period: 5m
+    environment:
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - SNAPSHOT=${SNAPSHOT}
+      - EXTRAS=${EXTRAS}
+    volumes:
+      - nitro-data:/var/lib/nitro
+      - /etc/localtime:/etc/localtime:ro
+      - ./mind/nodeConfigFullNodeExt.json:/data/config/nodeConfig.json
+    <<: *logging
+    entrypoint:
+      - docker-entrypoint.sh
+      - nitro
+      - --conf.file=/data/config/nodeConfig.json
+      - --parent-chain.connection.url
+      - ${PARENT_RPC}
+      - --node.dangerous.disable-blob-reader
+      - --validation.wasm.enable-wasmroots-check=false
+      - --execution.rpc.gas-cap
+      - "99999999999999"
+      - --execution.rpc.tx-fee-cap
+      - "0"
+      - --execution.rpc.evm-timeout
+      - "0"
+      - --rpc.max-batch-response-size
+      - "70000000"
+      - --rpc.batch-request-limit
+      - "0"
+      - --http.addr
+      - 0.0.0.0
+      - --http.port
+      - ${RPC_PORT:-8547}
+      - --http.vhosts=*
+      - --http.corsdomain=*
+      - --http.rpcprefix=/
+      - --ws.addr
+      - 0.0.0.0
+      - --ws.port
+      - ${WS_PORT:-8548}
+      - --ws.origins=*
+      - --ws.rpcprefix=/
+      - --metrics
+      - --metrics-server.addr
+      - 0.0.0.0
+      - --file-logging.enable=false
+      - --log-level
+      - ${LOG_LEVEL}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${RPC_HOST:-arb}.service=${RPC_HOST:-arb}
+      - traefik.http.routers.${RPC_HOST:-arb}.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-arb}.rule=Host(`${RPC_HOST:-arb}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-arb}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${RPC_HOST:-arb}lb.service=${RPC_HOST:-arb}
+      - traefik.http.routers.${RPC_HOST:-arb}lb.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-arb}lb.rule=Host(`${RPC_LB:-arb-lb}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-arb}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${RPC_HOST:-arb}.loadbalancer.server.port=${RPC_PORT:-8547}
+      - traefik.http.routers.${WS_HOST:-arbws}.service=${WS_HOST:-arbws}
+      - traefik.http.routers.${WS_HOST:-arbws}.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-arbws}.rule=Host(`${WS_HOST:-arbws}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-arbws}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${WS_HOST:-arbws}lb.service=${WS_HOST:-arbws}
+      - traefik.http.routers.${WS_HOST:-arbws}lb.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-arbws}lb.rule=Host(`${WS_LB:-arbws-lb}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-arbws}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${WS_HOST:-arbws}.loadbalancer.server.port=${WS_PORT:-8548}
+      - metrics.scrape=true
+      - metrics.path=/debug/metrics/prometheus
+      - metrics.port=6070
+      - metrics.network=${NETWORK}
+
+  set-prune-marker:
+    profiles: ["tools"]
+    image: alpine:3
+    restart: "no"
+    volumes:
+      - nitro-data:/var/lib/nitro
+    entrypoint: ["/bin/sh","-c"]
+    command: /bin/sh
+
+volumes:
+  nitro-data:
