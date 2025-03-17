@@ -1,0 +1,29 @@
+# mind.yaml - Mind Network Overrides
+# --------------------------------------------------
+# Use this file to override the default Arbitrum settings with
+# Mind Network–specific parameters.
+# --------------------------------------------------
+
+services:
+  nitro:
+    environment:
+      # Mind Network settings:
+      NETWORK: "mind"                    # Override network name to "mind"
+      SNAPSHOT: "genesis"                # Start from genesis for full sync
+      PARENT_RPC: "https://arb1.arbitrum.io/rpc"  # Use a reliable Arbitrum One RPC
+      PARENT_BEACON: ""                  # No beacon endpoint needed for Mind
+      EXTRAS: "--chain.id=228"           # Set the custom Mind chain ID
+      LOG_LEVEL: "info"
+      DOMAIN: "example.com"
+      RPC_HOST: "arb"
+      RPC_LB: "arb-lb"
+      WS_HOST: "arbws"
+      WS_LB: "arbws-lb"
+      RPC_PORT: "8547"
+      WS_PORT: "8548"
+    volumes:
+      # Use the same persistent volume as defined in the base config
+      - nitro-data:/var/lib/nitro
+      - /etc/localtime:/etc/localtime:ro
+      # Mount the Mind-specific node configuration file
+      - ./nodeConfigFullNodeExt.json:/data/config/nodeConfig.json
