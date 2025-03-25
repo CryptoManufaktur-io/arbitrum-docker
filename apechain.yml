@@ -9,27 +9,14 @@ x-logging: &logging
 services:
   nitro:
     restart: "unless-stopped"
-    build:
-      context: ./arbitrum
-      dockerfile: Dockerfile.binary
-      args:
-        - DOCKER_TAG=${NITRO_DOCKER_TAG}
-        - DOCKER_REPO=${DOCKER_REPO:-public.ecr.aws/i6b2w2n6/nitro-node}
-    image: nitro-apechain:local
-    pull_policy: never
-    user: user
+    image: ${DOCKER_REPO}:${NITRO_DOCKER_TAG}
     stop_grace_period: 5m
-    environment:
-      - LOG_LEVEL=${LOG_LEVEL:-info}
-      - SNAPSHOT=${SNAPSHOT}
-      - EXTRAS=${EXTRAS}
     volumes:
-      - nitro-data:/var/lib/nitro
+      - nitro-data:/home/user/.arbitrum
       - /etc/localtime:/etc/localtime:ro
       - ./apechain/nodeConfig.json:/config/nodeConfig.json
     <<: *logging
     entrypoint:
-      - docker-entrypoint.sh
       - nitro
       - --conf.file=/config/nodeConfig.json
       - --parent-chain.connection.url
@@ -80,15 +67,6 @@ services:
       - metrics.path=/debug/metrics/prometheus
       - metrics.port=6070
       - metrics.network=${NETWORK}
-
-  set-prune-marker:
-    profiles: ["tools"]
-    image: alpine:3
-    restart: "no"
-    volumes:
-      - nitro-data:/var/lib/nitro
-    entrypoint: ["/bin/sh","-c"]
-    command: /bin/sh
 
 volumes:
   nitro-data:
