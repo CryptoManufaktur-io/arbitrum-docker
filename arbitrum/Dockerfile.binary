@@ -1,6 +1,7 @@
 ARG DOCKER_TAG=v3.1.0-7d1d84c
+ARG DOCKER_REPO=offchainlabs/nitro-node
 
-FROM offchainlabs/nitro-node:${DOCKER_TAG}
+FROM ${DOCKER_REPO}:${DOCKER_TAG}
 
 ARG USER=user
 USER root

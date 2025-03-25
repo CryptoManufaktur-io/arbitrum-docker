@@ -21,6 +21,14 @@ version() {
       __docompose exec nitro nitro --version
       echo
       ;;&
+    *mind.yml* )
+      __docompose exec nitro nitro --version
+      echo
+      ;;&
+    *apechain.yml* )
+      __docompose exec nitro nitro --version
+      echo
+      ;;&
   esac
 }
 
@@ -31,7 +39,7 @@ __env_migrate() {
   fi
 
   __all_vars=( COMPOSE_FILE NETWORK SNAPSHOT PARENT_RPC PARENT_BEACON EXTRAS LOG_LEVEL \
-          NITRO_DOCKER_TAG DOMAIN RPC_HOST RPC_LB WS_HOST WS_LB RPC_PORT WS_PORT )
+          NITRO_DOCKER_TAG DOCKER_REPO DOMAIN RPC_HOST RPC_LB WS_HOST WS_LB RPC_PORT WS_PORT )
   __old_vars=( L1_RPC )
   __new_vars=( PARENT_RPC )
 
