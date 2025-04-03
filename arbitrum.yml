@@ -45,7 +45,7 @@ services:
       - --http.addr
       - 0.0.0.0
       - --http.port
-      - ${RPC_PORT:-8547} 
+      - ${RPC_PORT:-8547}
       - --http.vhosts=*
       - --http.corsdomain=*
       - --http.rpcprefix=/
