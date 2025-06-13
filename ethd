@@ -1003,8 +1003,7 @@ prune() {
     __rpc_port="${BASH_REMATCH[1]}"
   fi
 
-  __sync_status=$(__docompose exec -T nitro wget -qO- "http://localhost:$__rpc_port" --header 'Content-Type: application/json' --post-data '{"jsonrpc":"2.0","method":"eth_syncing","para
-ms":[],"id":1}')
+  __sync_status=$(__docompose exec -T nitro wget -qO- "http://localhost:$__rpc_port" --header 'Content-Type: application/json' --post-data '{"jsonrpc":"2.0","method":"eth_syncing","params":[],"id":1}')
   __exitstatus=$?
   if [ $__exitstatus -ne 0 ]; then
     echo "Unable to connect to Nitro: Is it running?"
