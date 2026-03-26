@@ -11,12 +11,16 @@ services:
     restart: "unless-stopped"
     image: ${DOCKER_REPO}:${NITRO_DOCKER_TAG}
     stop_grace_period: 5m
+    environment:
+      - EXTRAS=${EXTRAS}
     volumes:
       - nitro-data:/home/user/.arbitrum
       - /etc/localtime:/etc/localtime:ro
       - ./apechain/nodeConfig.json:/config/nodeConfig.json
+      - ./apechain/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
     <<: *logging
     entrypoint:
+      - docker-entrypoint.sh
       - nitro
       - --conf.file=/config/nodeConfig.json
       - --parent-chain.connection.url
