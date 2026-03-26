@@ -41,6 +41,8 @@ check-sync() {
         ;;&
     esac
 
+    echo "Using public RPC ${__rpc}"
+
     bash scripts/check_sync.sh --public-rpc "${__rpc}"  --compose-service nitro --local-rpc http://127.0.0.1:8547 || true
   else
     bash scripts/check_sync.sh "$@" || true
