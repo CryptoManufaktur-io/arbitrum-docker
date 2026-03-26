@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 set -eu
 
-exec "$@" ${EXTRAS}
+exec "$@" "${EXTRAS}"
