@@ -9,6 +9,15 @@ use `ext-network.yml` in that case
 
 If you want the RPC ports exposed locally, use `rpc-shared.yml` in `COMPOSE_FILE` inside `.env`
 
+## Supported chains
+
+Pick a chain by setting `COMPOSE_FILE` in `.env`:
+
+- `arbitrum.yml` — Arbitrum One / Nova / Sepolia (the default)
+- `apechain.yml` — ApeChain Orbit
+- `mind.yml` — Mind Orbit (builds Nitro locally)
+- `robinhood.yml` — Robinhood Orbit (parent chain is Ethereum L1; requires `PARENT_BEACON` and `PARTNER_KEY` in `.env`)
+
 The `./arbd` script can be used as a quick-start:
 
 `./arbd install`

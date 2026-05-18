@@ -1,0 +1,80 @@
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+      max-file: "3"
+      tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+
+services:
+  nitro:
+    restart: "unless-stopped"
+    image: ${DOCKER_REPO:-offchainlabs/nitro-node}:${ROBINHOOD_NITRO_TAG:-v3.10.0-b1cf6db}
+    stop_grace_period: 5m
+    environment:
+      - EXTRAS=${EXTRAS}
+    volumes:
+      - nitro-data:/home/user/.arbitrum
+      - /etc/localtime:/etc/localtime:ro
+      - ./robinhood/nodeConfig.json:/config/nodeConfig.json
+      - ./robinhood/genesis.json:/config/genesis.json
+      - ./robinhood/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
+    <<: *logging
+    entrypoint:
+      - docker-entrypoint.sh
+      - nitro
+      - --conf.file=/config/nodeConfig.json
+      - --init.genesis-json-file=/config/genesis.json
+      - --parent-chain.connection.url
+      - ${PARENT_RPC}
+      - --parent-chain.blob-client.beacon-url
+      - ${PARENT_BEACON}
+      - --node.feed.input.url=wss://ac23019b22f1ae5a-feed.offchainlabs.com/feed/${PARTNER_KEY}
+      - --execution.forwarding-target=https://ac23019b22f1ae5a-sequencer.offchainlabs.com/rpc/${PARTNER_KEY}
+      - --execution.transaction-filtering.enable-ethcall-filter=false
+      - --http.addr
+      - 0.0.0.0
+      - --http.port
+      - ${RPC_PORT:-8547}
+      - --http.vhosts=*
+      - --http.corsdomain=*
+      - --http.rpcprefix=/
+      - --ws.addr
+      - 0.0.0.0
+      - --ws.port
+      - ${WS_PORT:-8548}
+      - --ws.origins=*
+      - --ws.rpcprefix=/
+      - --metrics
+      - --metrics-server.addr
+      - 0.0.0.0
+      - --file-logging.enable=false
+      - --log-level
+      - ${LOG_LEVEL}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${RPC_HOST:-robinhood}.service=${RPC_HOST:-robinhood}
+      - traefik.http.routers.${RPC_HOST:-robinhood}.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-robinhood}.rule=Host(`${RPC_HOST:-robinhood}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-robinhood}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${RPC_HOST:-robinhood}lb.service=${RPC_HOST:-robinhood}
+      - traefik.http.routers.${RPC_HOST:-robinhood}lb.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-robinhood}lb.rule=Host(`${RPC_LB:-robinhood-lb}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-robinhood}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${RPC_HOST:-robinhood}.loadbalancer.server.port=${RPC_PORT:-8547}
+      - traefik.http.routers.${WS_HOST:-robinhoodws}.service=${WS_HOST:-robinhoodws}
+      - traefik.http.routers.${WS_HOST:-robinhoodws}.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-robinhoodws}.rule=Host(`${WS_HOST:-robinhoodws}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-robinhoodws}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${WS_HOST:-robinhoodws}lb.service=${WS_HOST:-robinhoodws}
+      - traefik.http.routers.${WS_HOST:-robinhoodws}lb.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-robinhoodws}lb.rule=Host(`${WS_LB:-robinhoodws-lb}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-robinhoodws}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${WS_HOST:-robinhoodws}.loadbalancer.server.port=${WS_PORT:-8548}
+      - metrics.scrape=true
+      - metrics.path=/debug/metrics/prometheus
+      - metrics.port=6070
+      - metrics.network=${NETWORK}
+
+volumes:
+  nitro-data:
