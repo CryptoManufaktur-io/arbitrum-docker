@@ -1,0 +1,69 @@
+{
+  "metrics-server": {
+    "port": 6070,
+    "addr": "0.0.0.0"
+  },
+  "chain": {
+    "id": 3343,
+    "info-json": "[{\"chain-id\":3343,\"parent-chain-id\":42161,\"parent-chain-is-arbitrum\":true,\"chain-name\":\"edge-mainnet\",\"chain-config\":{\"homesteadBlock\":0,\"daoForkBlock\":null,\"daoForkSupport\":true,\"eip150Block\":0,\"eip150Hash\":\"0x0000000000000000000000000000000000000000000000000000000000000000\",\"eip155Block\":0,\"eip158Block\":0,\"byzantiumBlock\":0,\"constantinopleBlock\":0,\"petersburgBlock\":0,\"istanbulBlock\":0,\"muirGlacierBlock\":0,\"berlinBlock\":0,\"londonBlock\":0,\"clique\":{\"period\":0,\"epoch\":0},\"arbitrum\":{\"EnableArbOS\":true,\"AllowDebugPrecompiles\":false,\"DataAvailabilityCommittee\":true,\"InitialArbOSVersion\":40,\"GenesisBlockNum\":0,\"MaxCodeSize\":24576,\"MaxInitCodeSize\":49152,\"InitialChainOwner\":\"0xc2507e8d43ae685fd1e98805bc96c6d31bbb5c28\"},\"chainId\":3343},\"rollup\":{\"bridge\":\"0x6F4836aFD5e21EDcee9b838C5a4125829EC198d0\",\"inbox\":\"0xeB88b89e085D6B747Dd6b9CEaf2716bdd89F1E7c\",\"sequencer-inbox\":\"0xe44B83D8a3A86994043C809E29B723a44FAEE479\",\"rollup\":\"0x14FdC47483e79d5A76599a74A2D622DA1cf97BBF\",\"validator-utils\":\"0xa0d6E6b1B950aCC748B45F3419FeAd4b52f7389A\",\"validator-wallet-creator\":\"0xc8C95B8b35772Ce4bF9E602336082696C2dC0DB8\",\"stake-token\":\"0x0000000000000000000000000000000000000000\",\"deployed-at\":393710880}}]",
+    "name": "edge-mainnet"
+  },
+  "http": {
+    "addr": "0.0.0.0",
+    "port": 8547,
+    "vhosts": "*",
+    "corsdomain": "*",
+    "api": [
+      "eth",
+      "net",
+      "web3",
+      "arb",
+      "debug",
+      "txpool"
+    ]
+  },
+  "ws": {
+    "addr": "0.0.0.0",
+    "port": 8548,
+    "api": [
+      "eth",
+      "net",
+      "web3",
+      "arb",
+      "txpool"
+    ]
+  },
+  "node": {
+    "feed": {
+      "output": {
+        "enable": false,
+        "port": 9642
+      }
+    },
+    "sequencer": false,
+    "delayed-sequencer": {
+      "enable": false
+    },
+    "seq-coordinator": {
+      "enable": false
+    },
+    "batch-poster": {
+      "enable": false
+    },
+    "staker": {
+      "enable": false,
+      "strategy": "MakeNodes"
+    },
+    "data-availability": {
+      "enable": false
+    }
+  },
+  "execution": {
+    "caching": {
+      "archive": true
+    },
+    "sequencer": {
+      "enable": false
+    }
+  }
+}

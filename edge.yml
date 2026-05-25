@@ -1,0 +1,78 @@
+x-logging: &logging
+  logging:
+    driver: json-file
+    options:
+      max-size: 100m
+      max-file: "3"
+      tag: '{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}'
+
+services:
+  nitro:
+    restart: "unless-stopped"
+    image: ${DOCKER_REPO:-offchainlabs/nitro-node}:${NITRO_DOCKER_TAG:-v3.9.5-66e42c4}
+    stop_grace_period: 5m
+    environment:
+      - EXTRAS=${EXTRAS}
+    volumes:
+      - nitro-data:/home/user/.arbitrum
+      - /etc/localtime:/etc/localtime:ro
+      - ./edge/nodeConfig.json:/config/nodeConfig.json
+      - ./edge/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh
+    <<: *logging
+    entrypoint:
+      - docker-entrypoint.sh
+      - nitro
+      - --conf.file=/config/nodeConfig.json
+      - --parent-chain.connection.url
+      - ${PARENT_RPC}
+      - --node.feed.input.url=wss://edge-mainnet-relay.rollups.alchemy.com
+      - --execution.forwarding-target=https://edge-mainnet-sequencer.rollups.alchemy.com
+      - --node.data-availability.enable
+      - --node.data-availability.rest-aggregator.enable
+      - --node.data-availability.rest-aggregator.urls=https://edge-mainnet-da-mirror.rollups.alchemy.com
+      - --http.addr
+      - 0.0.0.0
+      - --http.port
+      - ${RPC_PORT:-8547}
+      - --http.vhosts=*
+      - --http.corsdomain=*
+      - --http.rpcprefix=/
+      - --ws.addr
+      - 0.0.0.0
+      - --ws.port
+      - ${WS_PORT:-8548}
+      - --ws.origins=*
+      - --ws.rpcprefix=/
+      - --metrics
+      - --metrics-server.addr
+      - 0.0.0.0
+      - --file-logging.enable=false
+      - --log-level
+      - ${LOG_LEVEL}
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.${RPC_HOST:-edge}.service=${RPC_HOST:-edge}
+      - traefik.http.routers.${RPC_HOST:-edge}.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-edge}.rule=Host(`${RPC_HOST:-edge}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-edge}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${RPC_HOST:-edge}lb.service=${RPC_HOST:-edge}
+      - traefik.http.routers.${RPC_HOST:-edge}lb.entrypoints=websecure
+      - traefik.http.routers.${RPC_HOST:-edge}lb.rule=Host(`${RPC_LB:-edge-lb}.${DOMAIN}`)
+      - traefik.http.routers.${RPC_HOST:-edge}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${RPC_HOST:-edge}.loadbalancer.server.port=${RPC_PORT:-8547}
+      - traefik.http.routers.${WS_HOST:-edgews}.service=${WS_HOST:-edgews}
+      - traefik.http.routers.${WS_HOST:-edgews}.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-edgews}.rule=Host(`${WS_HOST:-edgews}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-edgews}.tls.certresolver=letsencrypt
+      - traefik.http.routers.${WS_HOST:-edgews}lb.service=${WS_HOST:-edgews}
+      - traefik.http.routers.${WS_HOST:-edgews}lb.entrypoints=websecure
+      - traefik.http.routers.${WS_HOST:-edgews}lb.rule=Host(`${WS_LB:-edgews-lb}.${DOMAIN}`)
+      - traefik.http.routers.${WS_HOST:-edgews}lb.tls.certresolver=letsencrypt
+      - traefik.http.services.${WS_HOST:-edgews}.loadbalancer.server.port=${WS_PORT:-8548}
+      - metrics.scrape=true
+      - metrics.path=/debug/metrics/prometheus
+      - metrics.port=6070
+      - metrics.network=${NETWORK}
+
+volumes:
+  nitro-data:

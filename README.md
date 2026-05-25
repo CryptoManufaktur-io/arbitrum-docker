@@ -16,7 +16,8 @@ Pick a chain by setting `COMPOSE_FILE` in `.env`:
 - `arbitrum.yml` — Arbitrum One / Nova / Sepolia (the default)
 - `apechain.yml` — ApeChain Orbit
 - `mind.yml` — Mind Orbit (builds Nitro locally)
-- `robinhood.yml` — Robinhood Orbit (parent chain is Ethereum L1; requires `PARENT_BEACON` and `PARTNER_KEY` in `.env`)
+- `robinhood.yml` — Robinhood Orbit (parent chain is Ethereum L1; requires `PARENT_RPC`, `PARENT_BEACON`, and `PARTNER_KEY` in `.env`)
+- `edge.yml` — Edge Orbit L3 (parent chain is Arbitrum One; requires `PARENT_RPC` pointing to Arbitrum Mainnet in `.env`)
 
 The `./arbd` script can be used as a quick-start:
 
