@@ -39,6 +39,9 @@ check-sync() {
       *mind.yml* )
         __rpc="https://rpc-mainnet.mindnetwork.xyz"
         ;;&
+      *edge.yml* )
+        __rpc="https://edge-mainnet.g.alchemy.com/public"
+        ;;&
     esac
 
     echo "Using public RPC ${__rpc}"
