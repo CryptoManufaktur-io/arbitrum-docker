@@ -9,7 +9,7 @@ x-logging: &logging
 services:
   nitro:
     restart: "unless-stopped"
-    image: ${DOCKER_REPO:-offchainlabs/nitro-node}:${ROBINHOOD_NITRO_TAG:-v3.10.0-b1cf6db}
+    image: ${DOCKER_REPO:-offchainlabs/nitro-node}:${ROBINHOOD_NITRO_TAG:-v3.11.0-rc.2-b4e3c3e}
     stop_grace_period: 5m
     environment:
       - EXTRAS=${EXTRAS}
