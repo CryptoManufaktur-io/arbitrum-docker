@@ -29,8 +29,9 @@ services:
       - ${PARENT_RPC}
       - --parent-chain.blob-client.beacon-url
       - ${PARENT_BEACON}
-      - --node.feed.input.url=wss://ac23019b22f1ae5a-feed.offchainlabs.com/feed/${PARTNER_KEY}
-      - --execution.forwarding-target=https://ac23019b22f1ae5a-sequencer.offchainlabs.com/rpc/${PARTNER_KEY}
+      - --node.feed.input.url=wss://feed.mainnet.chain.robinhood.com
+      - --node.feed.input.url=wss://delayed-feed.mainnet.chain.robinhood.com
+      - --execution.forwarding-target=https://sequencer.mainnet.chain.robinhood.com
       - --execution.transaction-filtering.enable-ethcall-filter=false
       - --http.addr
       - 0.0.0.0
