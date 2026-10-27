@@ -19,6 +19,9 @@ Pick a chain by setting `COMPOSE_FILE` in `.env`:
 - `robinhood.yml` — Robinhood Orbit (parent chain is Ethereum L1; requires `PARENT_RPC` and `PARENT_BEACON` in `.env`)
 - `edge.yml` — Edge Orbit L3 (parent chain is Arbitrum One; requires `PARENT_RPC` pointing to Arbitrum Mainnet in `.env`)
 
+The public HTTP/WS APIs only expose `eth`, `net`, `web3`, `arb` and `txpool`. The `debug` namespace is not enabled by default;
+if you really need it, set e.g. `EXTRAS=--http.api=net,web3,eth,arb,txpool,debug` in `.env`.
+
 The `./arbd` script can be used as a quick-start:
 
 `./arbd install`

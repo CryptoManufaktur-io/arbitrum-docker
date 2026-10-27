@@ -43,7 +43,6 @@
         "net",
         "web3",
         "arb",
-        "debug",
         "txpool"
       ]
     },
